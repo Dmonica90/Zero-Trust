@@ -16,25 +16,33 @@ window.InitUserScripts = function () {
   var keydown = player.keydown;
   var keyup = player.keyup;
   window.Script181 = function () {
+    // 1) Llamamos al "Cerebro" de Storyline
     var player = GetPlayer();
 
-    // Gate: sólo resetear si StartAgain está activada
-    if (player.GetVar("StartAgain")) {
+    // 2) Leemos la variable StartAgain
+    var startAgainVal = player.GetVar("StartAgain");
 
+    // 3) Gate: sólo resetear si StartAgain está activada
+    if (startAgainVal === true) {
+
+      // --- APLICAR RESET DE VARIABLES ---
+
+      // Control
       player.SetVar("StartAgain", false);
+
+      // Textos
       player.SetVar("Name", "");
 
-      // Resetear personajes activos usando un Array
-      var personajes = ["Leo", "Sara", "Omar"];
-      personajes.forEach(function (p) {
-        player.SetVar(p + "_Active", true);
-      });
+      // Estado de los personajes (Mía no está porque si la despides, ganas el juego)
+      player.SetVar("Leo_Active", true);
+      player.SetVar("Sara_Active", true);
+      player.SetVar("Omar_Active", true);
 
-      // Resetear zooms usando un Array
-      var zooms = ["Sara", "Omar", "Mia", "Leo"];
-      zooms.forEach(function (z) {
-        player.SetVar("Zoom_" + z, false);
-      });
+      // Zooms de exploración
+      player.SetVar("Zoom_Sara", false);
+      player.SetVar("Zoom_Omar", false);
+      player.SetVar("Zoom_Mia", false);
+      player.SetVar("Zoom_Leo", false);
     }
   }
 
@@ -42,55 +50,68 @@ window.InitUserScripts = function () {
     var texto = document.querySelector("[data-acc-text='Texto_Dia']");
     var fondo = document.querySelector("[data-acc-text='Fondo_Negro']");
 
-    if (texto && fondo) { // Prevención de errores si el DOM no ha cargado
-      // 1. Animación del texto (Aparece, se mantiene y desaparece)
+    if (texto && fondo) {
+      // --- NUEVO: Lógica de centrado Responsive ---
+      texto.style.position = "absolute";
+      texto.style.top = "50%";
+      texto.style.left = "50%";
+      texto.style.zIndex = "9999"; // Asegura que quede por encima del fondo negro
+      texto.style.transformOrigin = "center center"; // El escalado se hace desde el centro
+
+      // 1. Animación del texto
+      // Agregamos translate(-50%, -50%) a cada fotograma clave para mantener el centro perfecto
       texto.animate([
-        { opacity: 0, transform: 'scale(1.5)' },
-        { opacity: 1, transform: 'scale(1)', offset: 0.4 }, // Aparece a los 1.4s
-        { opacity: 1, transform: 'scale(1)', offset: 0.8 }, // Se mantiene en pantalla
-        { opacity: 0, transform: 'scale(1)' }               // Desaparece
+        { opacity: 0, transform: 'translate(-50%, -50%) scale(1.5)' },
+        { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.4 },
+        { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.8 },
+        { opacity: 0, transform: 'translate(-50%, -50%) scale(1)' }
       ], {
-        duration: 3500, // Equivale a tus 2s + 1.5s originales
+        duration: 3500,
         easing: 'ease-out',
         fill: 'forwards'
       });
 
-      // 2. Animación del fondo (Opcional, si también querías desvanecerlo como dice tu comentario)
+      // 2. Animación del fondo 
       fondo.animate([
         { opacity: 1 },
         { opacity: 0 }
       ], {
         duration: 1000,
-        delay: 3500, // Espera a que termine el texto
+        delay: 3500,
         fill: 'forwards'
       });
-    }                             // Finalmente, el fondo negro se desvanece para revelar la oficina
+    }
   }
 
   window.Script183 = function () {
     var texto = document.querySelector("[data-acc-text='Texto_Dia']");
     var fondo = document.querySelector("[data-acc-text='Fondo_Negro']");
 
-    if (texto && fondo) { // Prevención de errores si el DOM no ha cargado
-      // 1. Animación del texto (Aparece, se mantiene y desaparece)
+    if (texto && fondo) {
+      // Aplicamos la misma lógica de centrado
+      texto.style.position = "absolute";
+      texto.style.top = "50%";
+      texto.style.left = "50%";
+      texto.style.zIndex = "9999";
+      texto.style.transformOrigin = "center center";
+
       texto.animate([
-        { opacity: 0, transform: 'scale(1.5)' },
-        { opacity: 1, transform: 'scale(1)', offset: 0.4 }, // Aparece a los 1.4s
-        { opacity: 1, transform: 'scale(1)', offset: 0.8 }, // Se mantiene en pantalla
-        { opacity: 0, transform: 'scale(1)' }               // Desaparece
+        { opacity: 0, transform: 'translate(-50%, -50%) scale(1.5)' },
+        { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.4 },
+        { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.8 },
+        { opacity: 0, transform: 'translate(-50%, -50%) scale(1)' }
       ], {
-        duration: 3500, // Equivale a tus 2s + 1.5s originales
+        duration: 3500,
         easing: 'ease-out',
         fill: 'forwards'
       });
 
-      // 2. Animación del fondo (Opcional, si también querías desvanecerlo como dice tu comentario)
       fondo.animate([
         { opacity: 1 },
         { opacity: 0 }
       ], {
         duration: 1000,
-        delay: 3500, // Espera a que termine el texto
+        delay: 3500,
         fill: 'forwards'
       });
     }
