@@ -1,0 +1,236 @@
+{
+  "locale": "es",
+  "languageName": "Español",
+  "title": {
+    "line1": "Confianza Cero:",
+    "line2": "El Infiltrado"
+  },
+  "characters": {
+    "leo": {
+      "name": "Leo",
+      "role": "Ejecutivo de cuenta"
+    },
+    "sara": {
+      "name": "Sara",
+      "role": "Diseñadora"
+    },
+    "omar": {
+      "name": "Omar",
+      "role": "Marketing"
+    },
+    "mia": {
+      "name": "Mía",
+      "role": "Analista de sistemas"
+    }
+  },
+  "ui": {
+    "start": "Comenzar",
+    "gatherTeam": "Reunir al equipo",
+    "investigate": "Investigar",
+    "accuse": "Acusar",
+    "back": "Volver",
+    "question": "Interrogar a {name}",
+    "confirmTitle": "¿Estás seguro?",
+    "confirmBody": "La situación es crítica y justifica un despido inmediato. ¿Seguro que quieres despedir a {name}?",
+    "confirmCancel": "No, espera",
+    "confirmAccept": "Sí, despedir",
+    "chooseTitle": "¿Ya sabes quién es?",
+    "chooseBody": "Elige a un sospechoso.",
+    "chooseOption": "Creo que el infiltrado es {name}",
+    "firedNotice": "No se tolerará la negligencia. La persona ha sido despedida con efecto inmediato.",
+    "playAgain": "Jugar de nuevo",
+    "dayLabel": "Día {day} de 3",
+    "dayShort": "Día {day}",
+    "decisionsTitle": "Tus decisiones",
+    "evidenceTitle": "Bitácora de evidencias",
+    "evidenceEmpty": "Todavía no hay nada registrado. Abre un puesto de trabajo para empezar a reunir evidencia.",
+    "evidenceLooked": "Observado",
+    "evidenceQuestioned": "Interrogado",
+    "threatLabel": "Avance de la extracción",
+    "investigatedLabel": "{done} de {total} puestos revisados",
+    "languageLabel": "Idioma",
+    "muteOn": "Activar sonido",
+    "muteOff": "Silenciar",
+    "skip": "Saltar",
+    "close": "Cerrar"
+  },
+  "days": {
+    "1": {
+      "banner": null,
+      "alert": {
+        "label": "Urgente",
+        "body": "TI acaba de detectar una fuga masiva de datos que sale de las IP de tu equipo. Alguien está extrayendo la base de datos de clientes. Encuentra a la persona responsable de inmediato, antes de que la transferencia se complete.",
+        "reasons": null,
+        "cta": "Reunir al equipo"
+      },
+      "meeting": {
+        "introTitle": "El equipo está reunido.",
+        "introBody": "Ayuda a Marcus a encontrar al infiltrado. Informa al equipo sobre la brecha y escucha sus primeros argumentos.",
+        "hint": "Selecciona a cada integrante del equipo para escuchar sus primeros argumentos.",
+        "quotes": {
+          "mia": "Revisé los registros del servidor y noté tráfico inusual hacia una IP externa. Alguien debió conectarse a una red vulnerable.",
+          "omar": "He estado concentrado armando presentaciones. Solo entré a unas plataformas para generar imágenes con IA...",
+          "leo": "Chicos, yo no entiendo mucho de redes. Apenas logro acordarme de mi contraseña... mi computadora está limpísima.",
+          "sara": "He estado trabajando toda la mañana desde la cafetería de enfrente... yo estoy limpia."
+        }
+      },
+      "office": {
+        "hint": "Selecciona a cada integrante del equipo para investigarlo.",
+        "blockedTitle": "¡Un momento!",
+        "blockedBody": "Todavía no puedes tomar una decisión. Necesitas más información para estar completamente seguro. Investiga primero sus puestos de trabajo."
+      },
+      "investigations": {
+        "leo": {
+          "observation": "Mira su monitor. ¿Esa es su contraseña real en una nota adhesiva? Es una violación de seguridad enorme. ¿Interrogamos a Leo por esto?",
+          "question": "¿Por qué tienes la contraseña pegada al monitor, a la vista de todos?",
+          "answer": "¡Porque me piden cambiarla cada mes! Además, aquí no entra nadie de fuera de la oficina."
+        },
+        "omar": {
+          "observation": "Su bandeja de entrada está inundada de spam y tiene la sesión abierta en una plataforma de IA sin verificar. ¿Será ese el punto de entrada? ¿Interrogamos a Omar?",
+          "question": "¿Usaste tu correo corporativo para registrarte en esas páginas gratuitas?",
+          "answer": "¡Sí! Estaban regalando créditos gratis. De todos modos es solo para cosas de la oficina, no creo que roben datos."
+        },
+        "sara": {
+          "observation": "Su laptop está conectada al wifi abierto de la cafetería y no veo ninguna VPN activa. Eso expone todas sus credenciales. ¿Quieres interrogar a Sara?",
+          "question": "¿Estuviste trabajando con la base de datos desde el wifi abierto de la cafetería?",
+          "answer": "Sí, pero solo un ratito. La página de la empresa tiene un candadito (HTTPS), ¿no basta con eso?"
+        },
+        "mia": {
+          "observation": "Espera, mira bien detrás de su CPU. Hay una memoria USB sin registrar conectada y una consola negra ejecutando un script. ¿Quieres interrogar a Mía?",
+          "question": "¿Por qué tienes una USB sin registrar conectada y una consola corriendo?",
+          "answer": "Esa USB tiene mi música para concentrarme. Y la consola es solo una actualización del sistema."
+        }
+      }
+    },
+    "2": {
+      "banner": "El segundo día",
+      "alert": {
+        "label": "Urgente",
+        "body": "¡El ataque no se ha detenido! Sabemos que despediste a {name}, pero TI acaba de confirmar que nos equivocamos:",
+        "reasons": {
+          "leo": "Aunque anotar las contraseñas es un riesgo de seguridad enorme, esto es una extracción remota de datos. Nadie entró físicamente a la oficina a robar esa nota adhesiva.",
+          "sara": "Saltarse la VPN en una red pública expone credenciales, pero la extracción masiva de la base de datos está ocurriendo directamente desde nuestros servidores internos, no a través de su conexión local.",
+          "omar": "Hacer clic en enlaces de phishing y usar herramientas de IA sin verificar es peligroso, pero su equipo era solo un señuelo. El nodo principal de extracción está en otro lado.",
+          "mia": ""
+        },
+        "cta": "Reunir al equipo"
+      },
+      "meeting": {
+        "introTitle": "El equipo está reunido.",
+        "introBody": "Ayuda a Marcus a encontrar al infiltrado. Informa al equipo sobre la brecha y escucha sus primeros argumentos.",
+        "hint": "Selecciona a cada integrante del equipo para escuchar sus primeros argumentos.",
+        "quotes": {
+          "mia": "El ataque se está acelerando. El servidor central va al 80 % de su capacidad. ¡Tenemos que encontrar la fuga ahora mismo!",
+          "omar": "¡Ya cerré las páginas de IA! Pero me siguen llegando correos raros. Yo no estoy enviando nada.",
+          "leo": "¡Les dije que no era yo! Ya quité mi post-it, pero el sistema sigue lento. Alguien más está haciendo algo raro.",
+          "sara": "Ya me conecté al cable de la red de la oficina, como me pidieron. Pero mis archivos tardan muchísimo en cargar, la red está saturada."
+        }
+      },
+      "office": {
+        "hint": "Selecciona a cada integrante del equipo para investigarlo.",
+        "blockedTitle": "¡Un momento!",
+        "blockedBody": "Todavía no puedes tomar una decisión. Necesitas más información para estar completamente seguro. Investiga primero sus puestos de trabajo."
+      },
+      "investigations": {
+        "leo": {
+          "observation": "Esto es un desastre. No solo guardó sus contraseñas en un archivo de texto: ¡lo guardó sin querer en la unidad compartida pública! Cualquiera en el edificio pudo tomar sus credenciales. ¿Es el infiltrado o solo la víctima? Pregúntale a Leo.",
+          "question": "Leo, ¿por qué hay un archivo llamado 'Mis_Contraseñas.txt' en la unidad compartida pública?",
+          "answer": "¡Solo le di a 'Guardar como'! Pensé que 'Público' era mi escritorio público. ¡No sabía que toda la empresa podía verlo!"
+        },
+        "omar": {
+          "observation": "¡Mira la pantalla de Omar! Hay una sesión de 'Acceso remoto' activa y su mouse se mueve solo. ¡Alguien de fuera está controlando su máquina en este momento! ¿Estará colaborando con ellos? Pregúntale a Omar.",
+          "question": "Omar, hay una sesión remota activa en tu PC. ¿Quién está controlando tu máquina ahora mismo?",
+          "answer": "¡Me asusté! Abrí esa factura y mi PC se congeló. Un aviso decía que llamara a soporte de TI y me pidieron acceso remoto... ¿No era nuestro equipo real de TI?"
+        },
+        "sara": {
+          "observation": "Tiene el firewall desactivado y está corriendo un escáner de red que mapea todas nuestras direcciones IP internas. ¡Eso es exactamente lo que hace un atacante para encontrar bases de datos! ¿Por qué una diseñadora escanea nuestra red? Hay que preguntarle a Sara.",
+          "question": "Sara, tienes el firewall apagado y estás corriendo un escáner de red. ¿Estás buscando la base de datos principal?",
+          "answer": "¡La red va lentísima! Un tutorial decía que un escáner de red podía encontrar un canal DNS más rápido para mis renders de diseño. ¡Solo intento trabajar!"
+        },
+        "mia": {
+          "observation": "Mía parece estar trabajando con normalidad. Pero... mira esa USB negra. La luz de datos parpadea frenéticamente. ¿Por qué lee tantos datos si solo está escribiendo? Pregúntale a Mía.",
+          "question": "Mía, ¿por qué tu USB parpadea así de frenética si solo estás escribiendo un documento?",
+          "answer": "Es solo mi USB de música. La luz siempre parpadea cuando Windows indexa los archivos en segundo plano. Todo está bien, Marcus."
+        }
+      }
+    },
+    "3": {
+      "banner": "El tercer día",
+      "alert": {
+        "label": "Urgente",
+        "body": "¡El ataque no se ha detenido! Sabemos que despediste a {name}, pero TI acaba de confirmar que nos equivocamos:",
+        "reasons": {
+          "leo": "Aunque dejar contraseñas en una unidad pública es una violación crítica, su cuenta simplemente fue secuestrada por el verdadero infiltrado. Leo solo es peligrosamente descuidado, no el atacante.",
+          "sara": "Ejecutar herramientas de red no autorizadas es motivo de despido, pero fue solo un intento equivocado de arreglar su internet lento. La extracción masiva de datos no sale de su IP.",
+          "omar": "Cayó en una estafa de soporte técnico y le dio acceso remoto a un atacante. Sin embargo, solo usaron su PC como distracción. La fuga principal de la base de datos está ocurriendo físicamente.",
+          "mia": ""
+        },
+        "cta": "Reunir al equipo"
+      },
+      "meeting": {
+        "introTitle": "El equipo está reunido.",
+        "introBody": "Ayuda a Marcus a encontrar al infiltrado. Informa al equipo sobre la brecha y escucha sus primeros argumentos.",
+        "hint": "Selecciona a cada integrante del equipo para escuchar sus primeros argumentos.",
+        "quotes": {
+          "mia": "Parece que somos los últimos. La evidencia apunta a tu equipo. Te sugiero que confieses.",
+          "omar": "Ya hablé con TI, mandé mi equipo a cuarentena por el correo que abrí. Ya no tengo acceso a la red.",
+          "leo": "¡Solo quedamos nosotros! ¡Les juro que ni siquiera sé cómo abrir la consola de comandos! ¡Revisen mi máquina!",
+          "sara": "¡Hoy seguí todos los protocolos! No hay manera de que sea yo, ¡tiene que ser Mía!"
+        }
+      },
+      "office": {
+        "hint": "Selecciona a cada integrante del equipo para investigarlo.",
+        "blockedTitle": "¡Un momento!",
+        "blockedBody": "Todavía no puedes tomar una decisión. Necesitas más información para estar completamente seguro. Investiga primero sus puestos de trabajo."
+      },
+      "investigations": {
+        "leo": {
+          "observation": "¡Los atacantes finalmente cambiaron su contraseña y lo dejaron fuera de su propia máquina! Ni siquiera puede iniciar sesión. ¿Está borrando sus huellas o es solo daño colateral? Pregúntale a Leo.",
+          "question": "Leo, tu cuenta está bloqueada por múltiples intentos fallidos. ¿Estás tratando de borrar tus huellas?",
+          "answer": "¡No puedo entrar! Probé 'Admin123', 'Admin1234', ¡y me bloqueó! ¡Les juro que no soy yo!"
+        },
+        "omar": {
+          "observation": "TI aisló por completo la computadora de Omar de la red principal hace una hora por el acceso remoto. Si la fuga sigue activa ahora mismo, ¡físicamente no puede venir de su estación! Pregúntale a Omar.",
+          "question": "Omar, TI puso tu máquina en cuarentena. ¿Fuiste tú quien autorizó el acceso remoto a nuestra base de datos?",
+          "answer": "Mi pantalla se puso negra y dice 'En cuarentena'. ¡No he podido tocar nada en toda la mañana! Por favor créanme, estoy bloqueado."
+        },
+        "sara": {
+          "observation": "¡Sara entró en pánico! Desconectó físicamente su cable de red para detener el ataque, pero su sistema se cayó por completo. Si está desconectada, ¿cómo sigue ocurriendo la fuga? Pregúntale a Sara.",
+          "question": "Sara, tu cable de red está desconectado y tu sistema se cayó. ¿Estás tratando de ocultar la fuga de datos?",
+          "answer": "¡La red estaba enloquecida! Desconecté el cable para detener lo que fuera que pasaba, ¡pero mi PC se murió! No soy yo, estoy desconectada."
+        },
+        "mia": {
+          "observation": "La pantalla de Mía... nunca la había visto usar código hexadecimal en crudo. Se mueve demasiado rápido. Y mira esa USB: la luz de datos ya no parpadea, está fija en rojo. ¡Su máquina está procesando cantidades enormes de datos localmente! Hay que preguntarle a Mía de inmediato.",
+          "question": "Mía, tu máquina está ejecutando código hexadecimal en crudo y tu USB brilla en rojo fijo. ¿Estás copiando nuestros datos localmente?",
+          "answer": "¡Ay, Marcus! Me asustaste. Solo estoy aprendiendo algo de programación básica para un curso que estoy tomando. Pensé en correr un script de prueba rápido en mi USB personal para ver si funciona. Es solo un ejercicio de práctica, de verdad, nada de qué preocuparse."
+        }
+      }
+    }
+  },
+  "endings": {
+    "architect": {
+      "headline": "¡Amenaza neutralizada!",
+      "body": "¡Trabajo increíble! Detectaste la extracción de datos en sus primeras etapas y detuviste a Mía antes de que la base de datos de clientes saliera de nuestra red. Tu equipo, intacto, te lo agradece.",
+      "lesson": "Identificaste correctamente que, aunque las contraseñas en post-its o el uso de wifi público son prácticas pésimas, los dispositivos USB no autorizados y los scripts en segundo plano son el método número uno de extracción activa de datos.",
+      "rank": "¡Eres un Arquitecto de Confianza Cero!"
+    },
+    "neutralized": {
+      "headline": "¡Amenaza neutralizada!",
+      "body": "Lograste detener a Mía y salvar la base de datos principal, pero perdimos tiempo valioso investigando a la persona equivocada ayer. Hubo una pequeña fuga de información no crítica, pero la empresa sobrevivirá.",
+      "lesson": "Lograste ver más allá del engaño. Recuerda: en un incidente de ciberseguridad, el tiempo es vital. Aprender a priorizar entre una 'mala práctica de oficina' (como descargar archivos dudosos) y un 'ataque de extracción activa' marca toda la diferencia.",
+      "rank": null
+    },
+    "saved": {
+      "headline": "¡Sistema salvado en el último segundo!",
+      "body": "Detuviste la transferencia al 99 %. Despedimos a dos personas inocentes en el proceso y el equipo está agotado, pero evitaste la quiebra de la empresa. Fue un caso difícil, pero lo lograste.",
+      "lesson": "Te dejaste engañar por las malas prácticas comunes de tus compañeros, pero al final detectaste la brecha real. En el mundo real, los infiltrados verdaderos suelen esconderse detrás de los errores de los demás.",
+      "rank": null
+    },
+    "compromised": {
+      "headline": "¡Sistema comprometido!",
+      "body": "Tus datos ya están cifrados y han sido transferidos a servidores externos. Despediste a todas las personas inocentes y me dejaste el camino libre. Gracias por tu cooperación.",
+      "lesson": "Fallaste. Te concentraste demasiado en las distracciones (contraseñas mal guardadas, redes públicas, usar el correo para IA). Son malas prácticas que requieren capacitación, pero ignoraste las señales de un ataque activo: una USB desconocida y procesos ocultos en el monitor de Mía. Debes reiniciar el simulador y prestar más atención a los detalles técnicos.",
+      "rank": null
+    }
+  }
+}

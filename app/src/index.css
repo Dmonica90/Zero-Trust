@@ -1,0 +1,71 @@
+@import 'tailwindcss';
+
+/*
+ * A security-operations look: near-black ground, cyan for the player's own
+ * tools, violet for the story, amber/red for the escalating threat. The game is
+ * deliberately dark-only — it is a night-shift incident, not a document.
+ */
+@theme {
+  --color-ground: #07090f;
+  --color-panel: #0f1420;
+  --color-panel-2: #161d2e;
+  --color-edge: #24304a;
+  --color-ink: #e8ecf7;
+  --color-ink-dim: #97a3bd;
+  --color-accent: #38d8f0;
+  --color-accent-deep: #0e7f96;
+  --color-story: #8b6cf0;
+  --color-alarm: #ff5470;
+  --color-warn: #ffb547;
+  --color-safe: #3ddc97;
+
+  --font-display: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  overscroll-behavior: none;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+/* One visible focus treatment everywhere, so keyboard play is never guesswork. */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@utility panel {
+  background: color-mix(in oklab, var(--color-panel) 88%, transparent);
+  border: 1px solid var(--color-edge);
+  backdrop-filter: blur(12px);
+}
+
+@utility scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    color-mix(in oklab, var(--color-accent) 6%, transparent) 3px 4px
+  );
+}
