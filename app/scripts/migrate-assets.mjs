@@ -5,7 +5,8 @@
  *
  * The published slide data points at `story_content/*.png`, but those are Flash
  * era paths: the HTML5 runtime resolves them against `mobile/`, which is where
- * the real bitmaps live. This script reads from `mobile/` for that reason.
+ * the real bitmaps live. This script reads from `legacy/mobile/` for that
+ * reason.
  *
  * Run with `npm run assets`. It is idempotent.
  */
@@ -13,8 +14,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..');
-const IMG_SRC = path.join(ROOT, 'mobile');
-const MEDIA_SRC = path.join(ROOT, 'story_content');
+const LEGACY = path.join(ROOT, 'legacy');
+const IMG_SRC = path.join(LEGACY, 'mobile');
+const MEDIA_SRC = path.join(LEGACY, 'story_content');
 const OUT = path.resolve(import.meta.dirname, '..', 'public', 'assets');
 
 /** source file in mobile/ -> destination name under public/assets/img/ */
