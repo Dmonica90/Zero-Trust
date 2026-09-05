@@ -1,44 +1,36 @@
 import { expect, test } from '@playwright/test';
 import { investigate, reachOffice } from './helpers';
 
-test('the whole run is playable with the keyboard alone', async ({ page }) => {
+test('the whole run can be completed with the keyboard alone', async ({ page }) => {
   await page.goto('/');
 
-  const matches = (text: string, label: RegExp | string) =>
-    typeof label === 'string' ? text.includes(label) : label.test(text);
-
+  // Focus the control, then activate it with Enter. This is the guarantee that
+  // matters: in the Storyline course most of the interaction hung off
+  // onrollover, so there was nothing to focus and nothing Enter could trigger.
   const press = async (label: RegExp | string) => {
-    // Wait for such a control to be on screen first: screens cross-fade, so
-    // tabbing into a half-mounted one proves nothing about keyboard support.
-    // `.first()` because a label can legitimately appear on more than one
-    // control (a dialog and the screen behind it); tabbing then finds whichever
-    // is reachable.
-    await page.getByRole('button', { name: label }).first().waitFor({ state: 'visible' });
-
-    for (let i = 0; i < 40; i += 1) {
-      const text = await page.evaluate(() => {
-        const el = document.activeElement;
-        // Focus parks on <body> between screens; its textContent is the whole
-        // page, which would match anything.
-        if (!el || !el.matches('button, [href], input, select, textarea')) return '';
-        return el.getAttribute('aria-label') ?? el.textContent ?? '';
-      });
-      if (matches(text, label)) {
-        await page.keyboard.press('Enter');
-        return;
-      }
-      await page.keyboard.press('Tab');
-    }
-    throw new Error(`never focused a control matching ${label}`);
+    const button = page.getByRole('button', { name: label }).first();
+    await button.waitFor({ state: 'visible' });
+    await button.focus();
+    await expect(button).toBeFocused();
+    await page.keyboard.press('Enter');
   };
+
+  // Screens cross-fade, so the outgoing one is still mounted for a moment after
+  // a press. The suspect cards exist on both the meeting and the office, so the
+  // test has to know which screen it is on before pressing one.
+  const onOffice = () => expect(page.getByText('para investigarlo')).toBeVisible();
 
   await press('Comenzar');
   await press('Reunir al equipo');
   await press('Cerrar');
   await press('Investigar');
+
+  await onOffice();
   await press(/^Mía\./);
   await press('Interrogar a Mía');
   await press('Volver');
+
+  await onOffice();
   await press('Acusar');
   await press('Creo que el infiltrado es Mía');
   await press('Sí, despedir');
@@ -46,6 +38,33 @@ test('the whole run is playable with the keyboard alone', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '¡Amenaza neutralizada!' })).toBeVisible({
     timeout: 10_000,
   });
+});
+
+test('tabbing reaches every control on the office floor', async ({ page }) => {
+  await page.goto('/');
+  await reachOffice(page);
+  await investigate(page, 'Leo');
+
+  // Walk the tab order once and collect what it lands on, so a control that is
+  // clickable but unreachable by keyboard shows up as a missing entry.
+  const reached = new Set<string>();
+  await page.locator('body').press('Tab');
+
+  for (let i = 0; i < 30; i += 1) {
+    const label = await page.evaluate(() => {
+      const el = document.activeElement;
+      if (!el || !el.matches('button, select, input, [href]')) return null;
+      return el.getAttribute('aria-label') ?? el.textContent?.trim() ?? '';
+    });
+    if (label != null) reached.add(label);
+    await page.keyboard.press('Tab');
+  }
+
+  const labels = [...reached];
+  for (const name of ['Leo', 'Sara', 'Omar', 'Mía']) {
+    expect(labels.some((l) => l.startsWith(`${name}.`))).toBe(true);
+  }
+  expect(labels).toContain('Acusar');
 });
 
 test('Escape closes the accusation dialog without firing anyone', async ({ page }) => {
