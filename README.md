@@ -24,6 +24,20 @@ npm run dev
 `npm run build` produces a plain static site in `app/dist/`; deploy those files
 anywhere.
 
+## Publishing
+
+The game is live at **https://dmonica90.github.io/Zero-Trust/**.
+
+`.github/workflows/deploy.yml` rebuilds and republishes it on every push to
+`main`, so changing the script or the code is enough — there is nothing to
+compile or upload by hand. The workflow runs the unit tests first, so a broken
+build never reaches the live site. You can also re-publish without pushing, from
+the repository's Actions tab.
+
+The built site is not committed; only sources are. For this to work, the
+repository's **Settings → Pages → Source** must be set to **GitHub Actions**
+(rather than "Deploy from a branch").
+
 ## The legacy publish
 
 `legacy/` is the Storyline 360 output the game was rebuilt from (published
@@ -35,8 +49,9 @@ anywhere.
 - **It is the reference for the script.** `app/scripts/dump-slides.mjs` reads the
   published slide data, which is where the dialogue and the endings came from.
 
-Nothing in `app/` executes it, and it is not deployed. Open
-`legacy/index.html` if you want to see the original course.
+Nothing in `app/` executes it, and it is not deployed — the live site serves the
+rebuild only. Open `legacy/index.html` locally if you want to see the original
+course.
 
 The `.story` project file was never in this repository, so `legacy/` is the only
 record of the original. Deleting it would mean losing the artwork sources and the
