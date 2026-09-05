@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const SRC = path.resolve(import.meta.dirname, '../../html5/data/js');
+const SRC = path.resolve(import.meta.dirname, '../../legacy/html5/data/js');
 
 export function readSlide(id) {
   const raw = fs.readFileSync(path.join(SRC, `${id}.js`), 'utf8').replace(/^﻿/, '');

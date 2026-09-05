@@ -5,8 +5,9 @@ colleagues and decide who is exfiltrating the customer database. Firing the wron
 person costs you a day — and the attack keeps running.
 
 This is a ground-up rebuild of a course that was previously authored in
-Articulate Storyline 360. The original published output still lives at the
-repository root; everything here replaces it.
+Articulate Storyline 360. The original published output is kept under
+`../legacy/` as the source for the artwork and as a reference for the script;
+nothing in this app runs it.
 
 ## Why it was rebuilt
 
@@ -64,6 +65,11 @@ scripts/
 language is a new file plus an entry in `src/content/index.ts`. The tests fail if
 the two language files ever drift apart in shape.
 
+**English is the editorial source.** The original course was written in English,
+so `story.en.json` is where new or changed copy is authored and `story.es.json`
+is its translation. Spanish is still the default a player sees when their browser
+does not ask for English.
+
 **Logic is pure.** `src/game/machine.ts` imports nothing from React and holds no
 strings, so the rules are covered by fast unit tests rather than by clicking
 through the game.
@@ -73,7 +79,7 @@ through the game.
 The artwork, the nine sound effects and the short video clip come from the
 original course. The published slide data refers to images as
 `story_content/*.png`, but those are Flash-era paths — the real bitmaps are in
-`mobile/`, which is what `migrate-assets.mjs` reads. There is no narration to
+`legacy/mobile/`, which is what `migrate-assets.mjs` reads. There is no narration to
 re-record, which is why the bilingual version costs nothing beyond translation.
 
 `npm run assets` copies the originals and then re-encodes them: **24 MB of PNGs
