@@ -45,6 +45,11 @@ test('tabbing reaches every control on the office floor', async ({ page }) => {
   await reachOffice(page);
   await investigate(page, 'Leo');
 
+  // Wait for the workstation view to finish leaving: while it is still fading
+  // out it is the only thing on screen holding focusable controls.
+  await expect(page.getByText('para investigarlo')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Volver' })).toBeHidden();
+
   // Walk the tab order once and collect what it lands on, so a control that is
   // clickable but unreachable by keyboard shows up as a missing entry.
   const reached = new Set<string>();
@@ -62,9 +67,10 @@ test('tabbing reaches every control on the office floor', async ({ page }) => {
 
   const labels = [...reached];
   for (const name of ['Leo', 'Sara', 'Omar', 'Mía']) {
-    expect(labels.some((l) => l.startsWith(`${name}.`))).toBe(true);
+    expect(labels.filter((l) => l.startsWith(`${name}.`))).toHaveLength(1);
   }
   expect(labels).toContain('Acusar');
+  expect(labels).toContain('Silenciar');
 });
 
 test('Escape closes the accusation dialog without firing anyone', async ({ page }) => {
