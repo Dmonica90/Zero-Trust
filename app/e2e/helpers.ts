@@ -3,10 +3,23 @@ import type { Page } from '@playwright/test';
 
 export type Name = 'Leo' | 'Sara' | 'Omar' | 'Mía';
 
-/** Press start and skip the opening cinematic. */
+/**
+ * Press start and get past the opening cinematic.
+ *
+ * Headless Chromium ships without the H.264 decoder, so the clip errors out and
+ * the screen steps aside on its own — which is the fallback working. Either way
+ * what matters is arriving at the alert, so this skips only if there is still
+ * something to skip.
+ */
 export async function beginRun(page: Page) {
   await page.getByRole('button', { name: 'Comenzar' }).click();
-  await page.getByRole('button', { name: 'Saltar' }).click();
+
+  const skip = page.getByRole('button', { name: 'Saltar' });
+  const openMessage = page.getByRole('button', { name: /Abrir el mensaje/ });
+  await expect(skip.or(openMessage).first()).toBeVisible();
+  if (await skip.isVisible()) await skip.click();
+
+  await expect(openMessage).toBeVisible();
 }
 
 /** Title screen through to the first office floor. */
