@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { investigate, reachOffice } from './helpers';
+import { beginRun, investigate, reachOffice } from './helpers';
 
 test('the whole run can be completed with the keyboard alone', async ({ page }) => {
   await page.goto('/');
@@ -21,6 +21,13 @@ test('the whole run can be completed with the keyboard alone', async ({ page }) 
   const onOffice = () => expect(page.getByText('para investigarlo')).toBeVisible();
 
   await press('Comenzar');
+  // The cinematic bows out by itself where the clip cannot decode, so its skip
+  // button may already be gone; the alert behind it is what has to be reachable.
+  await page
+    .getByRole('button', { name: 'Saltar' })
+    .click({ timeout: 3000 })
+    .catch(() => undefined);
+  await press(/Abrir el mensaje/);
   await press('Reunir al equipo');
   await press('Cerrar');
   await press('Investigar');
@@ -43,12 +50,6 @@ test('the whole run can be completed with the keyboard alone', async ({ page }) 
 test('tabbing reaches every control on the office floor', async ({ page }) => {
   await page.goto('/');
   await reachOffice(page);
-  await investigate(page, 'Leo');
-
-  // Wait for the workstation view to finish leaving: while it is still fading
-  // out it is the only thing on screen holding focusable controls.
-  await expect(page.getByText('para investigarlo')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Volver' })).toBeHidden();
 
   // Walk the tab order once and collect what it lands on, so a control that is
   // clickable but unreachable by keyboard shows up as a missing entry.
@@ -69,8 +70,20 @@ test('tabbing reaches every control on the office floor', async ({ page }) => {
   for (const name of ['Leo', 'Sara', 'Omar', 'Mía']) {
     expect(labels.filter((l) => l.startsWith(`${name}.`))).toHaveLength(1);
   }
-  expect(labels).toContain('Acusar');
+  expect(labels).toContain('Volver con el equipo');
   expect(labels).toContain('Silenciar');
+});
+
+test('a workstation drops out of the tab order once it has been used', async ({ page }) => {
+  await page.goto('/');
+  await reachOffice(page);
+  await investigate(page, 'Leo');
+
+  // One look each: the spent desk stays on screen, marked, but is no longer a
+  // control, so the keyboard skips straight past it.
+  const spent = page.getByRole('button', { name: /^Leo\./ });
+  await expect(spent).toBeDisabled();
+  await expect(page.getByRole('button', { name: /^Sara\./ })).toBeEnabled();
 });
 
 test('Escape closes the accusation dialog without firing anyone', async ({ page }) => {
@@ -89,7 +102,8 @@ test('Escape closes the accusation dialog without firing anyone', async ({ page 
 
 test('the alert text is exposed in full to assistive technology while it types', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
+  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
 
   // The screen-reader copy is complete from the first frame, before the
   // character-by-character reveal has caught up.

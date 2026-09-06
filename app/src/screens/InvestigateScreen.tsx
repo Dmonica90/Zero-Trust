@@ -2,7 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { PORTRAITS, deskImage } from '../assets';
 import { Button, Scene } from '../components/ui';
-import { fill } from '../content/schema';
+import { fill, investigationFor } from '../content/schema';
+import { accusationBefore } from '../game/machine';
 import type { GameState, SuspectId } from '../game/types';
 import { useLanguage } from '../i18n/LanguageProvider';
 
@@ -23,7 +24,8 @@ export function InvestigateScreen({
 }) {
   const { story, t } = useLanguage();
   const day = story.days[String(state.day) as '1' | '2' | '3'];
-  const scene = day.investigations[suspect];
+  // What Marcus notices can depend on who was fired to get here.
+  const scene = investigationFor(day, suspect, accusationBefore(state, state.day)?.suspect ?? null);
   const character = story.characters[suspect];
   const [asked, setAsked] = useState(false);
 
@@ -71,7 +73,7 @@ export function InvestigateScreen({
           </AnimatePresence>
 
           <div className="mt-8 flex flex-wrap justify-end gap-3">
-            <Button tone="ghost" sfx="back" onClick={onBack}>
+            <Button tone="ghost" sfx="click" onClick={onBack}>
               {t('back')}
             </Button>
             {!asked && (

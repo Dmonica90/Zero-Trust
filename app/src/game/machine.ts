@@ -31,6 +31,11 @@ export const initialState: GameState = {
   showBlockedHint: false,
 };
 
+/** Workstations still open to visit today. */
+export function canOpen(state: GameState, suspect: SuspectId): boolean {
+  return state.active[suspect] && !state.visited[suspect];
+}
+
 /** Suspects the player can still look at and accuse today. */
 export function remainingSuspects(state: GameState): SuspectId[] {
   return SUSPECT_IDS.filter((id) => state.active[id]);
@@ -56,6 +61,9 @@ export function threatLevel(day: Day): number {
 export function reducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'start':
+      return { ...state, phase: 'intro' };
+
+    case 'introDone':
       return { ...state, phase: 'alert' };
 
     case 'gatherTeam':
@@ -64,8 +72,14 @@ export function reducer(state: GameState, action: GameAction): GameState {
     case 'goToOffice':
       return { ...state, phase: 'office', showBlockedHint: false };
 
+    // The decision tree loops: from the floor you can go back to the team or
+    // keep investigating. What you already found stays found.
+    case 'backToMeeting':
+      return { ...state, phase: 'meeting', investigating: null };
+
     case 'openSuspect': {
-      if (!state.active[action.suspect]) return state;
+      // One visit per person per day, and never to someone already fired.
+      if (!state.active[action.suspect] || state.visited[action.suspect]) return state;
       return {
         ...state,
         phase: 'investigating',

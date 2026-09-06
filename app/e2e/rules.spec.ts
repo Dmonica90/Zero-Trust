@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
-import { investigate, reachOffice } from './helpers';
+import { beginRun, investigate, reachOffice } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
 test('accusing from the meeting is blocked until something is investigated', async ({ page }) => {
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
+  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
   await page.getByRole('button', { name: 'Reunir al equipo' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click();
 
@@ -52,6 +53,7 @@ test('a fired suspect is gone from the following day', async ({ page }) => {
   await page.getByRole('button', { name: 'Sí, despedir' }).click();
   await expect(page.getByRole('status')).toBeHidden({ timeout: 6000 });
 
+  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
   await page.getByRole('button', { name: 'Reunir al equipo' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click();
   await expect(page.getByRole('button', { name: /^Leo\./ })).toHaveCount(0);

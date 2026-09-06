@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { BACKDROPS, INTRO_VIDEO, PORTRAITS } from '../assets';
+import { BACKDROPS, PORTRAITS } from '../assets';
 import { useSound } from '../audio/SoundProvider';
 import { Button, Scene, Stagger, StaggerItem } from '../components/ui';
 import { CULPRIT } from '../game/types';
@@ -26,8 +26,16 @@ export function EndingScreen({ state, onRestart }: { state: GameState; onRestart
   const ending = story.endings[outcome];
   const won = IS_WIN[outcome];
 
+  // A loss always comes from a day-3 accusation. Say why that person was not the
+  // one either, instead of ending on the generic screen.
+  const lastCall = state.accusations.at(-1);
+  const defeatReason =
+    !won && lastCall ? (story.days['3'].defeatReasons?.[lastCall.suspect] ?? '') : '';
+
+  // Only the defeat has a sound of its own; the published course played nothing
+  // but the generic click on a win, so a win stays quiet here too.
   useEffect(() => {
-    play(won ? 'win' : 'lose');
+    if (!won) play('lose');
   }, [won, play]);
 
   return (
@@ -35,23 +43,22 @@ export function EndingScreen({ state, onRestart }: { state: GameState; onRestart
       backdrop={won ? BACKDROPS.endingWin : BACKDROPS.endingCircuit}
       overlay={won ? 'bg-ground/82' : 'bg-ground/90'}
     >
-      {!won && (
-        <video
-          src={INTRO_VIDEO}
-          poster={BACKDROPS.endingCircuit}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
-        />
-      )}
-
       <div className="relative flex flex-1 items-center justify-center py-10">
         <Stagger>
           <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+            <StaggerItem>
+              <motion.p
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 240, damping: 16, delay: 0.2 }}
+                className={`inline-block rounded-full border px-5 py-2 font-mono text-sm tracking-[0.16em] uppercase ${
+                  won ? 'border-safe/60 bg-safe/10 text-safe' : 'border-alarm/60 bg-alarm/10 text-alarm'
+                }`}
+              >
+                {ending.badge}
+              </motion.p>
+            </StaggerItem>
+
             <StaggerItem>
               <h1
                 className={`text-3xl font-bold tracking-tight sm:text-5xl ${
@@ -61,6 +68,14 @@ export function EndingScreen({ state, onRestart }: { state: GameState; onRestart
                 {ending.headline}
               </h1>
             </StaggerItem>
+
+            {defeatReason && (
+              <StaggerItem>
+                <p className="border-l-2 border-warn pl-4 text-base leading-relaxed text-warn">
+                  {defeatReason}
+                </p>
+              </StaggerItem>
+            )}
 
             <StaggerItem>
               <p className="text-lg leading-relaxed">{ending.body}</p>

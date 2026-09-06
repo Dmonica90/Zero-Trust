@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "assets": "node scripts/migrate-assets.mjs && node scripts/optimize-images.mjs"
+    "assets": "node scripts/migrate-assets.mjs && node scripts/optimize-images.mjs",
+    "content:gaps": "node scripts/content-gaps.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",

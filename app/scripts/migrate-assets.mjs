@@ -24,6 +24,7 @@ const IMAGES = {
   // Scene backdrops
   '6bipHPQwHbF.png': 'bg-alert.png',
   '6PlLFHyh5SM.png': 'bg-alert-marcus.png',
+  '5ZlkdMMnK8f.png': 'icon-notification.png', // the chat bubble you click to open the alert
   '6GBL3h0hBTj.png': 'bg-meeting.png',
   '6PygR5p8Ov2.png': 'bg-office.png',
   '6hA9QPhCpL0.jpg': 'bg-ending-win.jpg',
@@ -38,11 +39,14 @@ const IMAGES = {
   '6Z8uLx6mD1e.jpg': 'desk-mia-day2.jpg',
   '5kLwFWQuQZz.jpg': 'desk-mia-day3.jpg',
 
-  // Character cut-outs
-  '6jZVT5Bth0r_C-10.png': 'portrait-leo.png',
-  '6MEdvb5ndgX_C-10.png': 'portrait-sara.png',
-  '6MiVyjbiKYT_C-10.png': 'portrait-omar.png',
-  '5V7UTG49BcZ_C-10.png': 'portrait-mia.png',
+  // Character cut-outs. These are the portraits each character uses in their own
+  // zoom scene, which is the only place the published course names them — the
+  // office "fired" layer shows the same four people with no names attached, so
+  // matching them there by clothing gets Sara and Mia the wrong way round.
+  '6jZVT5Bth0r.png': 'portrait-leo.png',
+  '5pAJm9ExQgr.png': 'portrait-sara.png',
+  '6byvreq8SDl_C20.png': 'portrait-omar.png',
+  '5wRoVJWFsfV.png': 'portrait-mia.png',
   '6RZfUOBXuMp.png': 'marcus-thinking.png',
   '6hWQXE9awfg.png': 'marcus-explaining.png',
 
@@ -51,17 +55,27 @@ const IMAGES = {
   '6XXuM4uCxnV.png': 'title-the-infiltrator.png',
 };
 
-/** source file in story_content/ -> destination name under public/assets/audio|video/ */
+/**
+ * source file in story_content/ -> destination name under public/assets/audio/
+ *
+ * Named after where each clip actually plays in the published course, found by
+ * resolving every slide's `audiolib` assetId against the asset table in
+ * `data.js`. Guessing from file size gets this wrong: the 6-second clip is the
+ * day-change sting, not a fanfare.
+ *
+ * The original has no victory sound — the winning slides carry only the generic
+ * click — so there is none here either.
+ */
 const AUDIO = {
-  '6mIve3Sk5Xw_44100_56_0.mp3': 'ui-click.mp3',
-  '5gxIJG31Q9l_44100_56_0.mp3': 'ui-select.mp3',
-  '6k9BidM4IZ0_44100_56_0.mp3': 'ui-back.mp3',
-  '60c4SokilrN_44100_56_0.mp3': 'ui-open.mp3',
-  '5kxXVdG50yX_44100_56_0.mp3': 'ui-confirm.mp3',
-  '64EadiGlfqK_44100_56_0.mp3': 'sfx-alert.mp3',
-  '6PU8KJQ2uyr_44100_56_0.mp3': 'sfx-fired.mp3',
-  '6ZOAXUPrmMg_44100_56_0.mp3': 'sfx-win.mp3',
-  '6DEtjpkk8x5_44100_56_0.mp3': 'sfx-lose.mp3',
+  '6k9BidM4IZ0_44100_56_0.mp3': 'ui-click.mp3', // 0.5s, on every slide
+  '5gxIJG31Q9l_44100_56_0.mp3': 'ui-select.mp3', // meeting and zoom
+  '60c4SokilrN_44100_56_0.mp3': 'ui-open.mp3', // meeting
+  '5kxXVdG50yX_44100_56_0.mp3': 'ui-confirm.mp3', // meeting, office, zoom
+  '6mIve3Sk5Xw_44100_56_0.mp3': 'sfx-notification.mp3', // 0.3s, notification only
+  '64EadiGlfqK_44100_56_0.mp3': 'sfx-alert.mp3', // 1.9s, notification only
+  '6PU8KJQ2uyr_44100_56_0.mp3': 'sfx-fired.mp3', // 2.0s, office
+  '6ZOAXUPrmMg_44100_56_0.mp3': 'sfx-day.mp3', // 6.0s, day-change card
+  '6DEtjpkk8x5_44100_56_0.mp3': 'sfx-lose.mp3', // 8.1s, defeat
 };
 
 const VIDEO = {

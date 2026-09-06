@@ -20,7 +20,11 @@ import sharp from 'sharp';
 const IMG_DIR = path.resolve(import.meta.dirname, '..', 'public', 'assets', 'img');
 
 /** Portraits sit at ~180px tall on screen; backdrops fill the viewport. */
-const MAX_WIDTH = (name) => (name.startsWith('portrait-') || name.startsWith('marcus-') ? 900 : 1920);
+const MAX_WIDTH = (name) => {
+  if (name.startsWith('icon-')) return 220; // small UI marks, never shown large
+  if (name.startsWith('portrait-') || name.startsWith('marcus-')) return 900;
+  return 1920;
+};
 
 const files = (await fs.readdir(IMG_DIR)).filter((f) => /\.(png|jpe?g)$/i.test(f));
 if (files.length === 0) {

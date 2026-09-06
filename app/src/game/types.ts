@@ -10,7 +10,15 @@ export type Day = 1 | 2 | 3;
  * Which screen the player is on. `investigating` is the zoomed-in workstation
  * view; the suspect being looked at lives in `GameState.investigating`.
  */
-export type Phase = 'title' | 'alert' | 'meeting' | 'office' | 'investigating' | 'ended';
+export type Phase =
+  | 'title'
+  /** The opening cinematic: the lead finds out about the attack. */
+  | 'intro'
+  | 'alert'
+  | 'meeting'
+  | 'office'
+  | 'investigating'
+  | 'ended';
 
 /**
  * How the run finished. The three winning outcomes differ only by how many days
@@ -34,7 +42,11 @@ export type GameState = {
   day: Day;
   phase: Phase;
   investigating: SuspectId | null;
-  /** Workstations opened on the *current* day. Resets when the day advances. */
+  /**
+   * Workstations opened on the *current* day. One visit each is all you get —
+   * that scarcity is what makes choosing who to investigate a decision — so this
+   * also closes the desk. Resets when the day advances.
+   */
   visited: SuspectFlags;
   /** Suspects still employed. A wrong accusation clears one. */
   active: SuspectFlags;
@@ -52,8 +64,10 @@ export type GameState = {
 
 export type GameAction =
   | { type: 'start' }
+  | { type: 'introDone' }
   | { type: 'gatherTeam' }
   | { type: 'goToOffice' }
+  | { type: 'backToMeeting' }
   | { type: 'openSuspect'; suspect: SuspectId }
   | { type: 'questionSuspect' }
   | { type: 'closeSuspect' }

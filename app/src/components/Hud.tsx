@@ -115,7 +115,7 @@ export function Hud({ state }: { state: GameState }) {
         )}
 
         <div className="mt-6 flex justify-end">
-          <Button tone="ghost" sfx="back" onClick={() => setLogOpen(false)}>
+          <Button tone="ghost" sfx="click" onClick={() => setLogOpen(false)}>
             {t('close')}
           </Button>
         </div>
