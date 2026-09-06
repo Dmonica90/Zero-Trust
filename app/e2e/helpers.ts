@@ -14,12 +14,17 @@ export type Name = 'Leo' | 'Sara' | 'Omar' | 'Mía';
 export async function beginRun(page: Page) {
   await page.getByRole('button', { name: 'Comenzar' }).click();
 
-  const skip = page.getByRole('button', { name: 'Saltar' });
-  const openMessage = page.getByRole('button', { name: /Abrir el mensaje/ });
-  await expect(skip.or(openMessage).first()).toBeVisible();
-  if (await skip.isVisible()) await skip.click();
+  // Skip if the button is still there when the click lands. Checking first and
+  // then clicking races the clip ending underneath us, so the click is allowed
+  // to miss: either way what has to be true is that the alert comes up.
+  await page
+    .getByRole('button', { name: 'Saltar' })
+    .click({ timeout: 3000 })
+    .catch(() => undefined);
 
-  await expect(openMessage).toBeVisible();
+  await expect(page.getByRole('button', { name: /Abrir el mensaje/ })).toBeVisible({
+    timeout: 20_000,
+  });
 }
 
 /** Title screen through to the first office floor. */
