@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { beginRun, fire, investigate, playDay, reachOffice } from './helpers';
+import { beginRun, fire, investigate, openAlert, playDay, reachOffice } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -18,7 +18,8 @@ test('catching Mia on day 2 neutralizes the threat without the rank', async ({ p
   await beginRun(page);
   await playDay(page, 'Leo');
 
-  // The day-2 alert must name yesterday's mistake.
+  // The day-2 alert must name yesterday's mistake — once it has been opened.
+  await openAlert(page);
   await expect(page.getByText(/despediste a Leo/)).toBeVisible();
   await expect(page.getByText(/extracción remota de datos/)).toBeVisible();
 

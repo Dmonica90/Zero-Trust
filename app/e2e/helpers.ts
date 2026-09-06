@@ -33,9 +33,25 @@ export async function reachOffice(page: Page) {
   await gatherAndInvestigate(page);
 }
 
+/**
+ * Open the day's alert by pressing the bubble on the desk. Safe to call twice: a
+ * test that reads the alert first has already opened it.
+ */
+export async function openAlert(page: Page) {
+  const bubble = page.getByRole('button', { name: /Abrir el mensaje/ });
+  const gather = page.getByRole('button', { name: 'Reunir al equipo' });
+
+  // On days 2 and 3 the day card holds the screen for four and a half seconds
+  // first, so wait for whichever of the two turns up, then press the bubble if
+  // it is the one that did.
+  await expect(bubble.or(gather).first()).toBeVisible({ timeout: 20_000 });
+  await bubble.click({ timeout: 3000 }).catch(() => undefined);
+  await expect(gather).toBeVisible();
+}
+
 /** From the day's alert: open the message, close the briefing, head to the desks. */
 export async function gatherAndInvestigate(page: Page) {
-  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
+  await openAlert(page);
   await page.getByRole('button', { name: 'Reunir al equipo' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click();
   await page.getByRole('button', { name: 'Investigar', exact: true }).click();
