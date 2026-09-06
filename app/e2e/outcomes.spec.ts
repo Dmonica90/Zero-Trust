@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { fire, investigate, playDay, reachOffice } from './helpers';
+import { beginRun, fire, investigate, playDay, reachOffice } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -15,7 +15,7 @@ test('catching Mia on day 1 earns the top rank', async ({ page }) => {
 });
 
 test('catching Mia on day 2 neutralizes the threat without the rank', async ({ page }) => {
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
   await playDay(page, 'Leo');
 
   // The day-2 alert must name yesterday's mistake.
@@ -28,7 +28,7 @@ test('catching Mia on day 2 neutralizes the threat without the rank', async ({ p
 });
 
 test('catching Mia on day 3 still saves the system', async ({ page }) => {
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
   await playDay(page, 'Leo');
   await playDay(page, 'Sara');
   await playDay(page, 'Mía');
@@ -39,7 +39,7 @@ test('catching Mia on day 3 still saves the system', async ({ page }) => {
 });
 
 test('firing all three innocents loses the run', async ({ page }) => {
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
   await playDay(page, 'Leo');
   await playDay(page, 'Sara');
   await playDay(page, 'Omar');
@@ -62,8 +62,9 @@ test('playing again returns to a clean title screen', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Comenzar' })).toBeVisible();
 
   // Day 1 again, with everyone back at their desk.
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
   await expect(page.getByText('DÍA 1 DE 3')).toBeHidden(); // alert screen has no HUD
+  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
   await page.getByRole('button', { name: 'Reunir al equipo' }).click();
   await expect(page.getByText('Día 1 de 3')).toBeVisible();
 });

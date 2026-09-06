@@ -2,26 +2,32 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { BACKDROPS, PORTRAITS } from '../assets';
 import { Hud } from '../components/Hud';
+import { DeskMark } from '../components/Hotspot';
+import { Mark, Stage } from '../components/Stage';
 import { SuspectCard } from '../components/SuspectCard';
 import { Button, Dialog, Scene } from '../components/ui';
 import { fill } from '../content/schema';
-import { canAccuse, remainingSuspects } from '../game/machine';
+import { canAccuse, canOpen, remainingSuspects } from '../game/machine';
+import { OFFICE_MARKS } from '../scene';
 import type { GameState, SuspectId } from '../game/types';
 import { useLanguage } from '../i18n/LanguageProvider';
 
 /**
- * The office floor: pick a workstation to inspect, or — once something has
- * actually been inspected — open the accusation flow.
+ * The office floor. Wide screens get the scene itself with a magnifier over each
+ * desk, the way the published course played; narrow ones get the same choices as
+ * a stacked list, because a 16:9 stage on a phone is a postage stamp.
  */
 export function OfficeScreen({
   state,
   onOpenSuspect,
+  onBackToMeeting,
   onPropose,
   onCancel,
   onConfirm,
 }: {
   state: GameState;
   onOpenSuspect: (suspect: SuspectId) => void;
+  onBackToMeeting: () => void;
   onPropose: (suspect: SuspectId) => void;
   onCancel: () => void;
   onConfirm: () => void;
@@ -29,44 +35,60 @@ export function OfficeScreen({
   const { story, t } = useLanguage();
   const day = story.days[String(state.day) as '1' | '2' | '3'];
   const [choosing, setChoosing] = useState(false);
-  // Firing gets its own beat before the day rolls over, so the consequence
-  // registers instead of flashing past.
   const [firing, setFiring] = useState<SuspectId | null>(null);
   const suspects = remainingSuspects(state);
   const accusable = canAccuse(state);
 
-  const pendingName = state.pendingAccusation
-    ? story.characters[state.pendingAccusation].name
-    : '';
+  const pendingName = state.pendingAccusation ? story.characters[state.pendingAccusation].name : '';
+  const markLabel = (id: SuspectId) => (canOpen(state, id) ? t('investigate') : t('alreadyAsked'));
 
   return (
-    <Scene backdrop={BACKDROPS.office} overlay="bg-ground/78">
+    <Scene backdrop={BACKDROPS.office} overlay="bg-ground/80">
       <Hud state={state} />
 
-      <div className="flex flex-1 flex-col justify-center gap-8 py-8">
+      <div className="flex flex-1 flex-col justify-center gap-6 py-6">
         <p className="text-center text-sm text-ink-dim sm:text-base">{day.office.hint}</p>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Stage backdrop={BACKDROPS.office} className="hidden lg:block">
+          {suspects.map((id, index) => (
+            <Mark key={id} at={OFFICE_MARKS[id]} delay={0.08 * index}>
+              <DeskMark
+                suspect={id}
+                done={!canOpen(state, id)}
+                label={markLabel(id)}
+                onSelect={() => onOpenSuspect(id)}
+              />
+            </Mark>
+          ))}
+        </Stage>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
           {suspects.map((id, index) => (
             <SuspectCard
               key={id}
               suspect={id}
               index={index}
               investigated={state.visited[id]}
+              disabled={!canOpen(state, id)}
               onSelect={() => onOpenSuspect(id)}
             />
           ))}
         </div>
 
-        <div className="flex flex-col items-center gap-2">
-          <Button
-            tone={accusable ? 'danger' : 'ghost'}
-            disabled={!accusable}
-            onClick={() => setChoosing(true)}
-            sfx="click"
-          >
-            {t('accuse')}
-          </Button>
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button tone="ghost" onClick={onBackToMeeting} sfx="open">
+              {t('backToMeeting')}
+            </Button>
+            <Button
+              tone={accusable ? 'danger' : 'ghost'}
+              disabled={!accusable}
+              onClick={() => setChoosing(true)}
+              sfx="click"
+            >
+              {t('accuse')}
+            </Button>
+          </div>
           {!accusable && <p className="max-w-md text-center text-sm text-warn">{day.office.blockedBody}</p>}
         </div>
       </div>

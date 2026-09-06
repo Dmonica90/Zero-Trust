@@ -3,14 +3,21 @@ import type { Page } from '@playwright/test';
 
 export type Name = 'Leo' | 'Sara' | 'Omar' | 'Mía';
 
+/** Press start and skip the opening cinematic. */
+export async function beginRun(page: Page) {
+  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await page.getByRole('button', { name: 'Saltar' }).click();
+}
+
 /** Title screen through to the first office floor. */
 export async function reachOffice(page: Page) {
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
   await gatherAndInvestigate(page);
 }
 
-/** From the day's alert: read it, close the briefing, head to the desks. */
+/** From the day's alert: open the message, close the briefing, head to the desks. */
 export async function gatherAndInvestigate(page: Page) {
+  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
   await page.getByRole('button', { name: 'Reunir al equipo' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click();
   await page.getByRole('button', { name: 'Investigar', exact: true }).click();
@@ -22,6 +29,7 @@ export async function investigate(page: Page, name: Name) {
   await page.getByRole('button', { name: new RegExp(`^${name}\\.`) }).click();
   await page.getByRole('button', { name: `Interrogar a ${name}` }).click();
   await page.getByRole('button', { name: 'Volver' }).click();
+  await expect(page.getByText('para investigarlo')).toBeVisible();
 }
 
 /** Accuse someone and confirm, waiting out the "fired" beat. */

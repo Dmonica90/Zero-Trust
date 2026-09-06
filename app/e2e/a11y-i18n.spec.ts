@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { investigate, reachOffice } from './helpers';
+import { beginRun, investigate, reachOffice } from './helpers';
 
 test('the whole run can be completed with the keyboard alone', async ({ page }) => {
   await page.goto('/');
@@ -21,6 +21,8 @@ test('the whole run can be completed with the keyboard alone', async ({ page }) 
   const onOffice = () => expect(page.getByText('para investigarlo')).toBeVisible();
 
   await press('Comenzar');
+  await press('Saltar');
+  await press(/Abrir el mensaje/);
   await press('Reunir al equipo');
   await press('Cerrar');
   await press('Investigar');
@@ -89,7 +91,8 @@ test('Escape closes the accusation dialog without firing anyone', async ({ page 
 
 test('the alert text is exposed in full to assistive technology while it types', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await beginRun(page);
+  await page.getByRole('button', { name: /Abrir el mensaje/ }).click();
 
   // The screen-reader copy is complete from the first frame, before the
   // character-by-character reveal has caught up.

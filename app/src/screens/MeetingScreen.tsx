@@ -2,15 +2,19 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { BACKDROPS, MARCUS } from '../assets';
 import { Hud } from '../components/Hud';
+import { SeatMark } from '../components/Hotspot';
+import { Mark, Stage } from '../components/Stage';
 import { SuspectCard } from '../components/SuspectCard';
 import { Button, Dialog, Scene } from '../components/ui';
 import { remainingSuspects } from '../game/machine';
+import { MEETING_MARKS } from '../scene';
 import type { GameState, SuspectId } from '../game/types';
 import { useLanguage } from '../i18n/LanguageProvider';
 
 /**
- * The stand-up: every remaining team member gives their account. Reading a quote
- * costs nothing, which is the point — talk is cheap, evidence is at the desks.
+ * The stand-up: everyone still employed gives their account. Talk is free, which
+ * is the point — the evidence is at the desks, and there you only get one look
+ * each.
  */
 export function MeetingScreen({
   state,
@@ -28,15 +32,29 @@ export function MeetingScreen({
   const [intro, setIntro] = useState(true);
   const [heard, setHeard] = useState<Set<SuspectId>>(new Set());
   const suspects = remainingSuspects(state);
+  const listen = (id: SuspectId) => setHeard((current) => new Set(current).add(id));
 
   return (
-    <Scene backdrop={BACKDROPS.meeting} overlay="bg-ground/80">
+    <Scene backdrop={BACKDROPS.meeting} overlay="bg-ground/82">
       <Hud state={state} />
 
-      <div className="flex flex-1 flex-col justify-center gap-8 py-8">
+      <div className="flex flex-1 flex-col justify-center gap-6 py-6">
         <p className="text-center text-sm text-ink-dim sm:text-base">{day.meeting.hint}</p>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Stage backdrop={BACKDROPS.meeting} className="hidden lg:block">
+          {suspects.map((id, index) => (
+            <Mark key={id} at={MEETING_MARKS[id]} delay={0.08 * index}>
+              <SeatMark
+                suspect={id}
+                label={t('hearThem')}
+                quote={heard.has(id) ? day.meeting.quotes[id] : undefined}
+                onSelect={() => listen(id)}
+              />
+            </Mark>
+          ))}
+        </Stage>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
           {suspects.map((id, index) => (
             <SuspectCard
               key={id}
@@ -44,7 +62,7 @@ export function MeetingScreen({
               index={index}
               investigated={heard.has(id)}
               quote={heard.has(id) ? day.meeting.quotes[id] : undefined}
-              onSelect={() => setHeard((current) => new Set(current).add(id))}
+              onSelect={() => listen(id)}
             />
           ))}
         </div>

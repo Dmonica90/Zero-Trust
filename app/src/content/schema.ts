@@ -38,6 +38,24 @@ export type DayContent = {
     blockedBody: string;
   };
   investigations: Record<SuspectId, Investigation>;
+  /**
+   * Per-branch overrides of `investigations`, keyed first by who was fired to
+   * reach this day and then by whose desk is being looked at.
+   *
+   * The design calls for what Marcus notices to depend on the branch you are on,
+   * but the written script covers one pass, not every combination. So the day's
+   * `investigations` stay the default and a branch only has to name the desks
+   * whose text actually differs. `npm run content:gaps` lists which combinations
+   * are still on the default, so the missing writing is visible rather than
+   * silently absent.
+   */
+  branches?: Partial<Record<SuspectId, Partial<Record<SuspectId, Investigation>>>>;
+  /**
+   * Why the person fired on the last day was not the culprit either. Only day 3
+   * has these: it is the one day a wrong call ends the run, and without them the
+   * lesson the course is teaching goes unsaid.
+   */
+  defeatReasons?: Record<SuspectId, string>;
 };
 
 export type EndingContent = {
@@ -46,6 +64,8 @@ export type EndingContent = {
   lesson: string;
   /** Shown as a rank badge on the winning endings. */
   rank: string | null;
+  /** Platinum / Gold / Silver, or the lockdown mark on the defeat. */
+  badge: string;
 };
 
 export type Story = {
@@ -59,6 +79,10 @@ export type Story = {
     openMessage: string;
     gatherTeam: string;
     investigate: string;
+    /** Shown on a desk that has already had its one visit today. */
+    alreadyAsked: string;
+    backToMeeting: string;
+    hearThem: string;
     accuse: string;
     back: string;
     question: string;
@@ -148,16 +172,50 @@ export function validateStory(story: Story, label: string): string[] {
     }
   }
 
+  // A branch that exists must be finished. Not declaring one is fine — that
+  // means "use the day's default" — but a declared one with blank text would
+  // reach a learner as an empty screen.
+  for (const day of ['1', '2', '3'] as const) {
+    const branches = story.days[day]?.branches ?? {};
+    for (const [fired, desks] of Object.entries(branches)) {
+      for (const [who, scene] of Object.entries(desks ?? {})) {
+        require(scene?.observation, `days.${day}.branches.${fired}.${who}.observation`);
+        require(scene?.question, `days.${day}.branches.${fired}.${who}.question`);
+        require(scene?.answer, `days.${day}.branches.${fired}.${who}.answer`);
+      }
+    }
+  }
+
   for (const outcome of OUTCOMES) {
     require(story.endings[outcome]?.headline, `endings.${outcome}.headline`);
     require(story.endings[outcome]?.body, `endings.${outcome}.body`);
     require(story.endings[outcome]?.lesson, `endings.${outcome}.lesson`);
+    require(story.endings[outcome]?.badge, `endings.${outcome}.badge`);
+  }
+
+  // Losing happens only on day 3, and every innocent needs their explanation.
+  for (const id of SUSPECT_IDS) {
+    if (id === 'mia') continue;
+    require(story.days['3'].defeatReasons?.[id], `days.3.defeatReasons.${id}`);
   }
 
   if (!story.ui.confirmBody.includes('{name}')) problems.push(`${label}: ui.confirmBody needs {name}`);
   if (!story.ui.chooseOption.includes('{name}')) problems.push(`${label}: ui.chooseOption needs {name}`);
 
   return problems;
+}
+
+/**
+ * The desk scene to show, taking the branch override when the script has one.
+ * `firedBefore` is who was dismissed on the previous day, or null on day 1.
+ */
+export function investigationFor(
+  day: DayContent,
+  suspect: SuspectId,
+  firedBefore: SuspectId | null,
+): Investigation {
+  const override = firedBefore ? day.branches?.[firedBefore]?.[suspect] : undefined;
+  return override ?? day.investigations[suspect];
 }
 
 /** Substitutes `{name}`-style placeholders. */

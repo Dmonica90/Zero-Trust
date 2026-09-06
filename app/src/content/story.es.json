@@ -28,6 +28,9 @@
     "openMessage": "Abrir el mensaje",
     "gatherTeam": "Reunir al equipo",
     "investigate": "Investigar",
+    "alreadyAsked": "Ya revisado hoy",
+    "backToMeeting": "Volver con el equipo",
+    "hearThem": "Escucharlo",
     "accuse": "Acusar",
     "back": "Volver",
     "question": "Interrogar a {name}",
@@ -107,7 +110,7 @@
       "banner": "El segundo día",
       "alert": {
         "label": "Urgente",
-        "body": "¡El ataque no se ha detenido! Sabemos que despediste a {name}, pero TI acaba de confirmar que nos equivocamos:",
+        "body": "¡El ataque no se ha detenido! Sabemos que despediste a {name}, pero TI acaba de confirmar que nos equivocamos: La empresa sigue en riesgo enorme y el reloj corre. ¡Encuentra al verdadero infiltrado antes de que se complete la transferencia!",
         "reasons": {
           "leo": "Aunque anotar las contraseñas es un riesgo de seguridad enorme, esto es una extracción remota de datos. Nadie entró físicamente a la oficina a robar esa nota adhesiva.",
           "sara": "Saltarse la VPN en una red pública expone credenciales, pero la extracción masiva de la base de datos está ocurriendo directamente desde nuestros servidores internos, no a través de su conexión local.",
@@ -159,7 +162,7 @@
       "banner": "El tercer día",
       "alert": {
         "label": "Urgente",
-        "body": "¡El ataque no se ha detenido! Sabemos que despediste a {name}, pero TI acaba de confirmar que nos equivocamos:",
+        "body": "¡El ataque no se ha detenido! Sabemos que despediste a {name}, pero TI acaba de confirmar que nos equivocamos: La empresa sigue en riesgo enorme y el reloj corre. ¡Encuentra al verdadero infiltrado antes de que se complete la transferencia!",
         "reasons": {
           "leo": "Aunque dejar contraseñas en una unidad pública es una violación crítica, su cuenta simplemente fue secuestrada por el verdadero infiltrado. Leo solo es peligrosamente descuidado, no el atacante.",
           "sara": "Ejecutar herramientas de red no autorizadas es motivo de despido, pero fue solo un intento equivocado de arreglar su internet lento. La extracción masiva de datos no sale de su IP.",
@@ -205,6 +208,12 @@
           "question": "Mía, tu máquina está ejecutando código hexadecimal en crudo y tu USB brilla en rojo fijo. ¿Estás copiando nuestros datos localmente?",
           "answer": "¡Ay, Marcus! Me asustaste. Solo estoy aprendiendo algo de programación básica para un curso que estoy tomando. Pensé en correr un script de prueba rápido en mi USB personal para ver si funciona. Es solo un ejercicio de práctica, de verdad, nada de qué preocuparse."
         }
+      },
+      "defeatReasons": {
+        "leo": "Los atacantes dejaron a Leo fuera de su propia máquina con las credenciales que le robaron el primer día. Aunque quisiera, ahora mismo no podría estar extrayendo nada.",
+        "sara": "La máquina de Sara se cayó y está desconectada. Un equipo sin red no puede subir una base de datos. La fuga real ni siquiera pasa por la red.",
+        "omar": "TI aisló la PC de Omar. Es víctima de un ataque de phishing, pero la fuga que sigue activa está esquivando por completo nuestros firewalls.",
+        "mia": ""
       }
     }
   },
@@ -213,25 +222,29 @@
       "headline": "¡Amenaza neutralizada!",
       "body": "¡Trabajo increíble! Detectaste la extracción de datos en sus primeras etapas y detuviste a Mía antes de que la base de datos de clientes saliera de nuestra red. Tu equipo, intacto, te lo agradece.",
       "lesson": "Identificaste correctamente que, aunque las contraseñas en post-its o el uso de wifi público son prácticas pésimas, los dispositivos USB no autorizados y los scripts en segundo plano son el método número uno de extracción activa de datos.",
-      "rank": "¡Eres un Arquitecto de Confianza Cero!"
+      "rank": "¡Eres un Arquitecto de Confianza Cero!",
+      "badge": "🏆 Platino"
     },
     "neutralized": {
       "headline": "¡Amenaza neutralizada!",
       "body": "Lograste detener a Mía y salvar la base de datos principal, pero perdimos tiempo valioso investigando a la persona equivocada ayer. Hubo una pequeña fuga de información no crítica, pero la empresa sobrevivirá.",
       "lesson": "Lograste ver más allá del engaño. Recuerda: en un incidente de ciberseguridad, el tiempo es vital. Aprender a priorizar entre una 'mala práctica de oficina' (como descargar archivos dudosos) y un 'ataque de extracción activa' marca toda la diferencia.",
-      "rank": null
+      "rank": null,
+      "badge": "🥇 Oro"
     },
     "saved": {
       "headline": "¡Sistema salvado en el último segundo!",
       "body": "Detuviste la transferencia al 99 %. Despedimos a dos personas inocentes en el proceso y el equipo está agotado, pero evitaste la quiebra de la empresa. Fue un caso difícil, pero lo lograste.",
       "lesson": "Te dejaste engañar por las malas prácticas comunes de tus compañeros, pero al final detectaste la brecha real. En el mundo real, los infiltrados verdaderos suelen esconderse detrás de los errores de los demás.",
-      "rank": null
+      "rank": null,
+      "badge": "🥈 Plata"
     },
     "compromised": {
       "headline": "¡Sistema comprometido!",
       "body": "Tus datos ya están cifrados y han sido transferidos a servidores externos. Despediste a todas las personas inocentes y me dejaste el camino libre. Gracias por tu cooperación.",
       "lesson": "Fallaste. Te concentraste demasiado en las distracciones (contraseñas mal guardadas, redes públicas, usar el correo para IA). Son malas prácticas que requieren capacitación, pero ignoraste las señales de un ataque activo: una USB desconocida y procesos ocultos en el monitor de Mía. Debes reiniciar el simulador y prestar más atención a los detalles técnicos.",
-      "rank": null
+      "rank": null,
+      "badge": "🚨 Sistema bloqueado"
     }
   }
 }
