@@ -93,7 +93,7 @@ export function MeetingScreen({
         </motion.h2>
         <p className="mt-3 leading-relaxed text-ink-dim">{day.office.blockedBody}</p>
         <div className="mt-6 flex justify-end gap-3">
-          <Button tone="ghost" onClick={onDismissHint} sfx="back">
+          <Button tone="ghost" onClick={onDismissHint} sfx="click">
             {t('close')}
           </Button>
           <Button onClick={onInvestigate} sfx="open">

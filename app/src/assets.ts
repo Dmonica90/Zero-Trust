@@ -9,6 +9,9 @@ const audio = (name: string) => `${import.meta.env.BASE_URL}assets/audio/${name}
 
 export const BACKDROPS = {
   alert: img('bg-alert.webp'),
+  // The chat bubble that sits on the boss's desk scene; clicking it opens the
+  // alert, which is the beat the published course opened every day with.
+  notificationIcon: img('icon-notification.webp'),
   alertMarcus: img('bg-alert-marcus.webp'),
   meeting: img('bg-meeting.webp'),
   office: img('bg-office.webp'),
@@ -45,12 +48,13 @@ export function deskImage(suspect: SuspectId, day: Day): string {
 export const SFX = {
   click: audio('ui-click.mp3'),
   select: audio('ui-select.mp3'),
-  back: audio('ui-back.mp3'),
   open: audio('ui-open.mp3'),
   confirm: audio('ui-confirm.mp3'),
+  notification: audio('sfx-notification.mp3'),
   alert: audio('sfx-alert.mp3'),
   fired: audio('sfx-fired.mp3'),
-  win: audio('sfx-win.mp3'),
+  /** The six-second day-change sting. */
+  day: audio('sfx-day.mp3'),
   lose: audio('sfx-lose.mp3'),
 } as const;
 

@@ -55,6 +55,8 @@ export type Story = {
   characters: Record<SuspectId, { name: string; role: string }>;
   ui: {
     start: string;
+    /** Label on the chat bubble that opens the day's alert. */
+    openMessage: string;
     gatherTeam: string;
     investigate: string;
     accuse: string;

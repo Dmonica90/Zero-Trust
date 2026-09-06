@@ -97,7 +97,7 @@ export function OfficeScreen({
         </ul>
 
         <div className="mt-6 flex justify-end">
-          <Button tone="quiet" sfx="back" onClick={() => setChoosing(false)}>
+          <Button tone="quiet" sfx="click" onClick={() => setChoosing(false)}>
             {t('confirmCancel')}
           </Button>
         </div>
@@ -116,7 +116,7 @@ export function OfficeScreen({
           {fill(story.ui.confirmBody, { name: pendingName })}
         </p>
         <div className="mt-6 flex flex-wrap justify-end gap-3">
-          <Button tone="ghost" sfx="back" onClick={onCancel}>
+          <Button tone="ghost" sfx="click" onClick={onCancel}>
             {t('confirmCancel')}
           </Button>
           <Button

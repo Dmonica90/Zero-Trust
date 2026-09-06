@@ -25,6 +25,7 @@
   },
   "ui": {
     "start": "Start",
+    "openMessage": "Open the message",
     "gatherTeam": "Gather the team",
     "investigate": "Investigate",
     "accuse": "Accuse",

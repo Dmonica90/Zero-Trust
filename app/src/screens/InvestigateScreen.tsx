@@ -71,7 +71,7 @@ export function InvestigateScreen({
           </AnimatePresence>
 
           <div className="mt-8 flex flex-wrap justify-end gap-3">
-            <Button tone="ghost" sfx="back" onClick={onBack}>
+            <Button tone="ghost" sfx="click" onClick={onBack}>
               {t('back')}
             </Button>
             {!asked && (

@@ -26,8 +26,10 @@ export function EndingScreen({ state, onRestart }: { state: GameState; onRestart
   const ending = story.endings[outcome];
   const won = IS_WIN[outcome];
 
+  // Only the defeat has a sound of its own; the published course played nothing
+  // but the generic click on a win, so a win stays quiet here too.
   useEffect(() => {
-    play(won ? 'win' : 'lose');
+    if (!won) play('lose');
   }, [won, play]);
 
   return (
