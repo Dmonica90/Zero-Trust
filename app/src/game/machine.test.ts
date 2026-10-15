@@ -21,30 +21,33 @@ const playDay = (state: GameState, suspect: SuspectId, look: SuspectId = suspect
   );
 
 describe('the opening', () => {
-  it('plays the cinematic before the first alert', () => {
+  it('goes straight to the first alert', () => {
+    expect(reducer(initialState, { type: 'start' }).phase).toBe('alert');
+  });
+
+  it('ignores the end of the breach cinematic outside it', () => {
     const started = reducer(initialState, { type: 'start' });
-    expect(started.phase).toBe('intro');
-    expect(reducer(started, { type: 'introDone' }).phase).toBe('alert');
+    expect(reducer(started, { type: 'breachDone' })).toBe(started);
   });
 });
 
 describe('outcomes', () => {
   it('accusing Mia on day 1 earns the best rank', () => {
-    const end = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'mia');
+    const end = playDay(run([{ type: 'start' }]), 'mia');
     expect(end.phase).toBe('ended');
     expect(end.outcome).toBe('architect');
     expect(end.day).toBe(1);
   });
 
   it('accusing Mia on day 2 neutralizes the threat', () => {
-    const day2 = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'leo');
+    const day2 = playDay(run([{ type: 'start' }]), 'leo');
     expect(day2.day).toBe(2);
     expect(day2.phase).toBe('alert');
     expect(playDay(day2, 'mia').outcome).toBe('neutralized');
   });
 
   it('accusing Mia on day 3 still saves the system', () => {
-    let s = run([{ type: 'start' }, { type: 'introDone' }]);
+    let s = run([{ type: 'start' }]);
     s = playDay(s, 'leo');
     s = playDay(s, 'sara');
     expect(s.day).toBe(3);
@@ -52,19 +55,21 @@ describe('outcomes', () => {
   });
 
   it('firing all three innocents loses the run', () => {
-    let s = run([{ type: 'start' }, { type: 'introDone' }]);
+    let s = run([{ type: 'start' }]);
     s = playDay(s, 'leo');
     s = playDay(s, 'sara');
     s = playDay(s, 'omar');
-    expect(s.phase).toBe('ended');
+    // The breach cinematic plays first, then the debrief.
+    expect(s.phase).toBe('breach');
     expect(s.outcome).toBe('compromised');
     expect(remainingSuspects(s)).toEqual(['mia']);
+    expect(reducer(s, { type: 'breachDone' }).phase).toBe('ended');
   });
 });
 
 describe('day transitions', () => {
   it('a wrong accusation deactivates the suspect and opens the next day', () => {
-    const s = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'omar');
+    const s = playDay(run([{ type: 'start' }]), 'omar');
     expect(s.active.omar).toBe(false);
     expect(s.day).toBe(2);
     expect(s.phase).toBe('alert');
@@ -72,13 +77,13 @@ describe('day transitions', () => {
   });
 
   it('clears the visited workstations so they can be re-investigated', () => {
-    const s = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'leo');
+    const s = playDay(run([{ type: 'start' }]), 'leo');
     expect(s.visited).toEqual({ leo: false, sara: false, omar: false, mia: false });
     expect(s.investigating).toBeNull();
   });
 
   it('keeps the evidence log across days', () => {
-    let s = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'leo');
+    let s = playDay(run([{ type: 'start' }]), 'leo');
     s = playDay(s, 'sara');
     expect(s.evidence).toEqual([
       { day: 1, suspect: 'leo', questioned: true },
@@ -91,7 +96,6 @@ describe('accusation gating', () => {
   it('blocks accusing from the meeting before anything is investigated', () => {
     const s = run([
       { type: 'start' },
-      { type: 'introDone' },
       { type: 'gatherTeam' },
       { type: 'attemptAccuseFromMeeting' },
     ]);
@@ -102,7 +106,6 @@ describe('accusation gating', () => {
   it('lets the player through once a workstation has been opened', () => {
     const s = run([
       { type: 'start' },
-      { type: 'introDone' },
       { type: 'gatherTeam' },
       { type: 'goToOffice' },
       { type: 'openSuspect', suspect: 'mia' },
@@ -116,7 +119,6 @@ describe('accusation gating', () => {
   it('ignores an accusation proposed before any investigation', () => {
     const s = run([
       { type: 'start' },
-      { type: 'introDone' },
       { type: 'gatherTeam' },
       { type: 'goToOffice' },
       { type: 'proposeAccusation', suspect: 'mia' },
@@ -135,7 +137,7 @@ describe('accusation gating', () => {
         { type: 'proposeAccusation', suspect: 'leo' },
         { type: 'cancelAccusation' },
       ],
-      run([{ type: 'start' }, { type: 'introDone' }]),
+      run([{ type: 'start' }]),
     );
     expect(s.pendingAccusation).toBeNull();
     expect(s.active.leo).toBe(true);
@@ -143,7 +145,7 @@ describe('accusation gating', () => {
   });
 
   it('cannot open or accuse a suspect who was already fired', () => {
-    const day2 = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'leo');
+    const day2 = playDay(run([{ type: 'start' }]), 'leo');
     const opened = reducer(day2, { type: 'openSuspect', suspect: 'leo' });
     expect(opened).toBe(day2);
 
@@ -157,7 +159,7 @@ describe('accusation gating', () => {
 
 describe('evidence log', () => {
   it('records a look, then upgrades it when the follow-up is asked', () => {
-    let s = run([{ type: 'start' }, { type: 'introDone' }, { type: 'gatherTeam' }, { type: 'goToOffice' }]);
+    let s = run([{ type: 'start' }, { type: 'gatherTeam' }, { type: 'goToOffice' }]);
     s = reducer(s, { type: 'openSuspect', suspect: 'sara' });
     expect(s.evidence).toEqual([{ day: 1, suspect: 'sara', questioned: false }]);
 
@@ -166,7 +168,7 @@ describe('evidence log', () => {
   });
 
   it('keeps one entry per suspect per day', () => {
-    let s = run([{ type: 'start' }, { type: 'introDone' }, { type: 'gatherTeam' }, { type: 'goToOffice' }]);
+    let s = run([{ type: 'start' }, { type: 'gatherTeam' }, { type: 'goToOffice' }]);
     s = run(
       [
         { type: 'openSuspect', suspect: 'omar' },
@@ -180,7 +182,7 @@ describe('evidence log', () => {
 });
 
 describe('one visit per suspect per day', () => {
-  const atOffice = () => run([{ type: 'start' }, { type: 'introDone' }, { type: 'gatherTeam' }, { type: 'goToOffice' }]);
+  const atOffice = () => run([{ type: 'start' }, { type: 'gatherTeam' }, { type: 'goToOffice' }]);
 
   it('closes a workstation once it has been looked at', () => {
     let s = atOffice();
@@ -200,7 +202,7 @@ describe('one visit per suspect per day', () => {
   });
 
   it('opens them all again the next day', () => {
-    const day2 = playDay(run([{ type: 'start' }, { type: 'introDone' }]), 'leo', 'sara');
+    const day2 = playDay(run([{ type: 'start' }]), 'leo', 'sara');
     expect(day2.day).toBe(2);
     for (const id of remainingSuspects(day2)) expect(canOpen(day2, id)).toBe(true);
   });
@@ -210,7 +212,6 @@ describe('moving between the meeting and the office', () => {
   it('goes back to the team without losing what was found', () => {
     let s = run([
       { type: 'start' },
-      { type: 'introDone' },
       { type: 'gatherTeam' },
       { type: 'goToOffice' },
       { type: 'openSuspect', suspect: 'mia' },
@@ -232,7 +233,7 @@ describe('moving between the meeting and the office', () => {
 
 describe('restart', () => {
   it('returns to a pristine state after a loss', () => {
-    let s = run([{ type: 'start' }, { type: 'introDone' }]);
+    let s = run([{ type: 'start' }]);
     s = playDay(s, 'leo');
     s = playDay(s, 'sara');
     s = playDay(s, 'omar');

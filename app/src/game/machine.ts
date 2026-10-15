@@ -61,10 +61,10 @@ export function threatLevel(day: Day): number {
 export function reducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'start':
-      return { ...state, phase: 'intro' };
-
-    case 'introDone':
       return { ...state, phase: 'alert' };
+
+    case 'breachDone':
+      return state.phase === 'breach' ? { ...state, phase: 'ended' } : state;
 
     case 'gatherTeam':
       return { ...state, phase: 'meeting' };
@@ -131,11 +131,12 @@ export function reducer(state: GameState, action: GameAction): GameState {
 
       const active = { ...state.active, [suspect]: false };
 
-      // Out of days: the infiltrator finishes the transfer.
+      // Out of days: the infiltrator finishes the transfer. The glitch cinematic
+      // plays before the debrief.
       if (state.day === 3) {
         return {
           ...state,
-          phase: 'ended',
+          phase: 'breach',
           outcome: 'compromised',
           accusations,
           active,

@@ -2,8 +2,8 @@ import { AnimatePresence } from 'framer-motion';
 import { useReducer } from 'react';
 import { initialState, reducer } from './game/machine';
 import { AlertScreen } from './screens/AlertScreen';
+import { BreachScreen } from './screens/BreachScreen';
 import { EndingScreen } from './screens/EndingScreen';
-import { IntroScreen } from './screens/IntroScreen';
 import { InvestigateScreen } from './screens/InvestigateScreen';
 import { MeetingScreen } from './screens/MeetingScreen';
 import { OfficeScreen } from './screens/OfficeScreen';
@@ -20,9 +20,6 @@ export function App() {
     switch (state.phase) {
       case 'title':
         return <TitleScreen key="title" onStart={() => dispatch({ type: 'start' })} />;
-
-      case 'intro':
-        return <IntroScreen key="intro" onDone={() => dispatch({ type: 'introDone' })} />;
 
       case 'alert':
         return (
@@ -67,6 +64,9 @@ export function App() {
             onBack={() => dispatch({ type: 'closeSuspect' })}
           />
         ) : null;
+
+      case 'breach':
+        return <BreachScreen key="breach" onDone={() => dispatch({ type: 'breachDone' })} />;
 
       case 'ended':
         return (

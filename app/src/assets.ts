@@ -64,4 +64,4 @@ export type SfxName = keyof typeof SFX;
  * The 7-second clip from the original course. It only backs the losing ending,
  * so it is never preloaded — a player who wins never pays for it.
  */
-export const INTRO_VIDEO = `${import.meta.env.BASE_URL}assets/video/intro-glitch.mp4`;
+export const BREACH_VIDEO = `${import.meta.env.BASE_URL}assets/video/intro-glitch.mp4`;

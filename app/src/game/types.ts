@@ -12,12 +12,12 @@ export type Day = 1 | 2 | 3;
  */
 export type Phase =
   | 'title'
-  /** The opening cinematic: the lead finds out about the attack. */
-  | 'intro'
   | 'alert'
   | 'meeting'
   | 'office'
   | 'investigating'
+  /** The glitch cinematic: the third wrong call lets the transfer finish. */
+  | 'breach'
   | 'ended';
 
 /**
@@ -64,7 +64,7 @@ export type GameState = {
 
 export type GameAction =
   | { type: 'start' }
-  | { type: 'introDone' }
+  | { type: 'breachDone' }
   | { type: 'gatherTeam' }
   | { type: 'goToOffice' }
   | { type: 'backToMeeting' }

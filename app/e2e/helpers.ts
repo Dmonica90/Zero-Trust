@@ -3,28 +3,24 @@ import type { Page } from '@playwright/test';
 
 export type Name = 'Leo' | 'Sara' | 'Omar' | 'Mía';
 
-/**
- * Press start and get past the opening cinematic.
- *
- * Headless Chromium ships without the H.264 decoder, so the clip errors out and
- * the screen steps aside on its own — which is the fallback working. Either way
- * what matters is arriving at the alert, so this skips only if there is still
- * something to skip.
- */
+/** Press start and arrive at the day's alert. */
 export async function beginRun(page: Page) {
   await page.getByRole('button', { name: 'Comenzar' }).click();
+  await expect(page.getByRole('button', { name: /Abrir el mensaje/ })).toBeVisible();
+}
 
-  // Skip if the button is still there when the click lands. Checking first and
-  // then clicking races the clip ending underneath us, so the click is allowed
-  // to miss: either way what has to be true is that the alert comes up.
+/**
+ * Get past the breach cinematic that plays after the losing call.
+ *
+ * Headless Chromium ships without the H.264 decoder, so the clip errors out and
+ * the screen steps aside on its own — which is the fallback working. The click
+ * is allowed to miss: either way what has to be true is that the debrief comes up.
+ */
+export async function skipBreach(page: Page) {
   await page
     .getByRole('button', { name: 'Saltar' })
     .click({ timeout: 3000 })
     .catch(() => undefined);
-
-  await expect(page.getByRole('button', { name: /Abrir el mensaje/ })).toBeVisible({
-    timeout: 20_000,
-  });
 }
 
 /** Title screen through to the first office floor. */

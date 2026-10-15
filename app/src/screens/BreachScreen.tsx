@@ -1,18 +1,19 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import { INTRO_VIDEO } from '../assets';
+import { BREACH_VIDEO } from '../assets';
 import { Button } from '../components/ui';
 import { useLanguage } from '../i18n/LanguageProvider';
 
 /**
- * The opening cinematic. The decision tree starts on "the lead finds out about
- * the cyberattack", and the seven-second clip for it shipped with the course but
- * was never wired to a slide — it only ever sat in the asset table.
+ * The breach cinematic: plays when the third wrong call lets the infiltrator
+ * finish the transfer, right before the "system compromised" debrief. The
+ * seven-second glitch clip shipped with the course but was never wired to a
+ * slide — it only ever sat in the asset table.
  *
  * It is skippable and, if the file will not play, gets out of the way by itself
  * rather than stranding anyone on a black screen.
  */
-export function IntroScreen({ onDone }: { onDone: () => void }) {
+export function BreachScreen({ onDone }: { onDone: () => void }) {
   const { t } = useLanguage();
   const [ready, setReady] = useState(false);
   const done = useRef(false);
@@ -39,7 +40,7 @@ export function IntroScreen({ onDone }: { onDone: () => void }) {
       className="relative grid min-h-dvh w-full place-items-center bg-ground"
     >
       <video
-        src={INTRO_VIDEO}
+        src={BREACH_VIDEO}
         autoPlay
         muted
         playsInline

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { beginRun, fire, investigate, openAlert, playDay, reachOffice } from './helpers';
+import { beginRun, fire, investigate, openAlert, playDay, reachOffice, skipBreach } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -44,8 +44,11 @@ test('firing all three innocents loses the run', async ({ page }) => {
   await playDay(page, 'Leo');
   await playDay(page, 'Sara');
   await playDay(page, 'Omar');
+  await skipBreach(page);
 
-  await expect(page.getByRole('heading', { name: '¡Sistema comprometido!' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '¡Sistema comprometido!' })).toBeVisible({
+    timeout: 20_000,
+  });
 
   // The debrief replays all three wrong calls.
   const decisions = page.getByText('Tus decisiones').locator('..');

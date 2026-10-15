@@ -21,12 +21,6 @@ test('the whole run can be completed with the keyboard alone', async ({ page }) 
   const onOffice = () => expect(page.getByText('para investigarlo')).toBeVisible();
 
   await press('Comenzar');
-  // The cinematic bows out by itself where the clip cannot decode, so its skip
-  // button may already be gone; the alert behind it is what has to be reachable.
-  await page
-    .getByRole('button', { name: 'Saltar' })
-    .click({ timeout: 3000 })
-    .catch(() => undefined);
   await press(/Abrir el mensaje/);
   await press('Reunir al equipo');
   await press('Cerrar');
